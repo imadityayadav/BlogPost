@@ -22,3 +22,21 @@ exports.likePost = async (req,res)=>{
         })
     }
 }
+
+exports.unlikePost = async (req,res)=>{
+    try{
+        const {post,like} = req.body;
+        const deletedLike = await Like.findOneAndDelete({post:post, _id:like});
+
+        const updatedPost = await Post.findByIdAndUpdate(post,{Likes: deletedLike._id},{new:true});
+
+        res.json({
+            post:updatedPost,
+        })
+    }
+    catch(error){
+        return res.status(500).json({
+            error: "Error while Creating Comment",
+        })
+    }
+}
